@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=d>evice-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Khipus</title>
+    <style>
+        /* .pendant-cord > div{
+            transform: rotate(130deg);
+            border-radius: 50%;
+            border: 1px solid black;
+            margin-top: -5px;
+        } */
+    </style>
+</head>
+
+<body>
+    <div class="bg-slate-400 p-8">
+
+        <label for="UserEmail"
+            class="flex flex-row border-gray-200 m-3 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600">
+            <input type="text" id="newCord" pattern="[0-9\.]" placeholder="Enter number for new cord"
+                class="peer h-8 w-full border-none bg-white p-0" value="1" />
+
+            <a class=" border-indigo-600 bg-indigo-600 px-3 text-white hover:bg-indigo-300 hover:text-indigo-600 focus:outline-none focus:ring active:text-indigo-500"
+                href="#" onclick="clickAdd()">
+                <span>+</span>
+            </a>
+        </label>
+        <div class="primary-cord-visual bg-orange-200 w-full h-10 border"></div>
+        <div id="primary-cord" class="flex flex-row ">
+            <!-- <div class="w-max h-10"></div> -->
+            <!-- <div class="pendant-cord flex flex-col ml-2">
+                <div class="w-10 h-10 bg-orange-300"></div>
+                <div class="w-10 h-1 bg-yellow-950"></div>
+                <div class="w-10 h-10 bg-orange-300"></div>
+                <div class="w-10 h-10 bg-red-500"></div>
+                <div class="w-10 h-10 bg-orange-300"></div>
+                <div class="w-10 h-10 bg-orange-500"></div>
+                <div class="w-10 h-10 bg-orange-300"></div>
+                <div class="flex-none text-center">111</div>
+            </div>
+            <div class="sub-pendant-cord flex flex-col">
+                <div class="w-10 h-[80px] bg-green-300"></div>
+                <div class="w-10 h-10 bg-orange-300"></div>
+                <div class="w-10 h-1 bg-yellow-950"></div>
+                <div class="w-10 h-10 bg-orange-300"></div>
+                <div class="w-10 h-10 bg-red-500"></div>
+                <div class="w-10 h-10 bg-orange-300"></div>
+                <div class="w-10 h-10 bg-orange-500"></div>
+                <div class="w-10 h-10 bg-orange-300"></div>
+                <div class="flex-none text-center">111</div>
+            </div> -->
+        </div>
+    </div>
+</body>
+<script>
+    let emptyColor = 'bg-orange-300';
+    let boxHeight = 20;
+    function clickAdd() {
+        let newCord = document.getElementById('newCord');
+
+        let inputPattern = newCord.value;
+        addCord(inputPattern)
+    }
+    function addCord(inputPattern) {
+        // console.log(inputPattern);
+        let parsedPattern = inputPattern.split('.');
+        // console.log(parsedPattern);
+
+        let primaryCord = document.getElementById('primary-cord');
+
+        let [pendantCord, totalHeight] = createPendantCord(parsedPattern[0], 0, 'ml-4');
+        if (parsedPattern.length > 0) {
+
+            // let fourth = getDigit(inputPattern, 4);
+            // pendantCord.append(createSingleKnot(0 + (20 - fourth), emptyColor));
+            // pendantCord.append(createSingleKnot(fourth, 'bg-yellow-950'));
+            // let third = getDigit(inputPattern, 3);
+            // pendantCord.append(createSingleKnot(0 + (20 - third), emptyColor));
+            // pendantCord.append(createSingleKnot(third, 'bg-yellow-800'));
+            // let second = getDigit(inputPattern, 2);
+            // pendantCord.append(createSingleKnot(0 + (20 - second), emptyColor));
+            // pendantCord.append(createSingleKnot(second, 'bg-red-500'));
+            // let first = getDigit(inputPattern, 1);
+            // pendantCord.append(createSingleKnot(0 + (20 - first), emptyColor));
+            // pendantCord.append(createSingleKnot(first, 'bg-orange-500'));
+
+            // pendantCord.append(createSingleKnot(10, emptyColor));
+            // console.log(pendantCord);
+            // let text = document.createElement("span");
+            // text.innerHTML = inputPattern;
+            // pendantCord.append(text);
+            primaryCord.append(pendantCord);
+            let lastHeight = totalHeight;
+            for (let i = 1; i < parsedPattern.length; i++) {
+                let [subPendantCord, subHeight] = createPendantCord(parsedPattern[i], lastHeight, '');
+                // console.debug('subheight', subHeight)
+                lastHeight = subHeight;
+                primaryCord.append(subPendantCord);
+            }
+
+        }
+
+    }
+
+    function getDigit(number, n) {
+        return Math.floor((number / Math.pow(10, n - 1)) % 10);
+    }
+
+    function createSingleKnot(height, color) {
+        let div = document.createElement("div");
+        // console.log(height);
+        div.classList = `w-10 h-[${height * 2}px] ${color}`;
+        return div;
+    }
+
+    function createPendantCord(inputPattern, spacer, gapLeft) {
+        // console.debug('inputPattern', inputPattern);
+        let pendantCord = document.createElement("div");
+        pendantCord.classList = "pendant-cord flex flex-col " + gapLeft;
+        let fourth = getDigit(inputPattern, 4);
+        pendantCord.append(createSingleKnot(spacer, ''));
+        pendantCord.append(createSingleKnot(boxHeight - fourth, emptyColor));
+        pendantCord.append(createSingleKnot(fourth, 'bg-yellow-950'));
+        let third = getDigit(inputPattern, 3);
+        pendantCord.append(createSingleKnot(boxHeight - third, emptyColor));
+        pendantCord.append(createSingleKnot(third, 'bg-yellow-800'));
+        let second = getDigit(inputPattern, 2);
+        pendantCord.append(createSingleKnot(boxHeight - second, emptyColor));
+        pendantCord.append(createSingleKnot(second, 'bg-red-500'));
+        let first = getDigit(inputPattern, 1);
+        pendantCord.append(createSingleKnot(boxHeight - first, emptyColor));
+        pendantCord.append(createSingleKnot(first, 'bg-orange-500'));
+
+        let endingBox = createSingleKnot(boxHeight, emptyColor+ ' text-transparent text-center text-2xl hover:text-red-500');
+        endingBox.ondblclick = (e) => deleteCord(e);
+        endingBox.innerHTML = 'X';
+        
+        pendantCord.append(endingBox);
+
+        let totalHeight = spacer + boxHeight - fourth + boxHeight - third + boxHeight - second + boxHeight - first + fourth + third + second + first;
+        // console.debug('otherHeight', totalHeight);
+        let text = document.createElement("span");
+        text.innerHTML = inputPattern;
+        
+
+        pendantCord.append(text);
+        
+        return [pendantCord, totalHeight];
+    }
+
+    function deleteCord(event) {
+        console.debug(event.target.parentNode);
+        event.target.parentNode.remove();
+    }
+
+    addCord('2024.03.26');
+    // addCord('8888');
+    // addCord('1.1');
+    // addCord('1.1.1');
+    // addCord('1');
+    // addCord('9999.9999.9999');
+    // for (let index = 0; index <10; index++) {
+    //     addCord(index);
+    // }
+
+</script>
+
+
+</html>
